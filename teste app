@@ -1,0 +1,157 @@
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+class Restaurante {
+    private String nome;
+    private String tipoDeCozinha;
+    private double classificacao;
+
+    public Restaurante(String nome, String tipoDeCozinha, double classificacao) {
+        this.nome = nome;
+        this.tipoDeCozinha = tipoDeCozinha;
+        this.classificacao = classificacao;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public String getTipoDeCozinha() {
+        return tipoDeCozinha;
+    }
+
+    public double getClassificacao() {
+        return classificacao;
+    }
+}
+
+class PesquisaRestaurantes {
+    private List<Restaurante> restaurantes;
+
+    public PesquisaRestaurantes() {
+        this.restaurantes = new ArrayList<>();
+        inicializarRestaurantes();
+    }
+
+    private void inicializarRestaurantes() {
+        restaurantes.add(new Restaurante("Restaurante A", "Italiana", 4.5));
+        restaurantes.add(new Restaurante("Restaurante B", "Chinesa", 4.0));
+        restaurantes.add(new Restaurante("Restaurante C", "Indiana", 4.2));
+        // Adicione mais restaurantes conforme necessário
+    }
+
+    public List<Restaurante> getRestaurantes() {
+        return restaurantes;
+    }
+
+    public List<Restaurante> pesquisarPorNome(String nome) {
+        List<Restaurante> resultados = new ArrayList<>();
+        for (Restaurante restaurante : restaurantes) {
+            if (restaurante.getNome().equalsIgnoreCase(nome)) {
+                resultados.add(restaurante);
+            }
+        }
+        return resultados;
+    }
+
+    public List<Restaurante> pesquisarPorTipoDeCozinha(String tipoCozinha) {
+        List<Restaurante> resultados = new ArrayList<>();
+        for (Restaurante restaurante : restaurantes) {
+            if (restaurante.getTipoDeCozinha().equalsIgnoreCase(tipoCozinha)) {
+                resultados.add(restaurante);
+            }
+        }
+        return resultados;
+    }
+
+    public List<Restaurante> pesquisarPorClassificacao(double classificacaoMinima) {
+        List<Restaurante> resultados = new ArrayList<>();
+        for (Restaurante restaurante : restaurantes) {
+            if (restaurante.getClassificacao() >= classificacaoMinima) {
+                resultados.add(restaurante);
+            }
+        }
+        return resultados;
+    }
+}
+
+class Menu {
+    private Scanner scanner;
+
+    public Menu() {
+        this.scanner = new Scanner(System.in);
+    }
+
+    public int exibirMenu() {
+        System.out.println("Bem-vindo ao aplicativo de pesquisa de restaurantes!");
+        System.out.println("Por favor, escolha uma opção de pesquisa:");
+        System.out.println("1. Pesquisar por nome");
+        System.out.println("2. Pesquisar por tipo de cozinha");
+        System.out.println("3. Pesquisar por classificação");
+        System.out.println("4. Sair");
+        System.out.print("Opção: ");
+        return scanner.nextInt();
+    }
+
+    public String lerNome() {
+        System.out.print("Digite o nome do restaurante: ");
+        scanner.nextLine(); // Limpar o buffer
+        return scanner.nextLine();
+    }
+
+    public String lerTipoCozinha() {
+        System.out.print("Digite o tipo de cozinha: ");
+        return scanner.next();
+    }
+
+    public double lerClassificacao() {
+        System.out.print("Digite a classificação mínima: ");
+        return scanner.nextDouble();
+    }
+}
+
+public class App {
+    public static void main(String[] args) {
+        PesquisaRestaurantes pesquisaRestaurantes = new PesquisaRestaurantes();
+        Menu menu = new Menu();
+
+        int opcao;
+        do {
+            opcao = menu.exibirMenu();
+            switch (opcao) {
+                case 1:
+                    String nome = menu.lerNome();
+                    List<Restaurante> resultadosNome = pesquisaRestaurantes.pesquisarPorNome(nome);
+                    exibirResultados(resultadosNome);
+                    break;
+                case 2:
+                    String tipoCozinha = menu.lerTipoCozinha();
+                    List<Restaurante> resultadosTipoCozinha = pesquisaRestaurantes.pesquisarPorTipoDeCozinha(tipoCozinha);
+                    exibirResultados(resultadosTipoCozinha);
+                    break;
+                case 3:
+                    double classificacao = menu.lerClassificacao();
+                    List<Restaurante> resultadosClassificacao = pesquisaRestaurantes.pesquisarPorClassificacao(classificacao);
+                    exibirResultados(resultadosClassificacao);
+                    break;
+                case 4:
+                    System.out.println("Saindo...");
+                    break;
+                default:
+                    System.out.println("Opção inválida!");
+            }
+        } while (opcao != 4);
+    }
+
+    public static void exibirResultados(List<Restaurante> resultados) {
+        if (resultados.isEmpty()) {
+            System.out.println("Nenhum restaurante encontrado.");
+        } else {
+            System.out.println("Restaurante(s) encontrado(s):");
+            for (Restaurante restaurante : resultados) {
+                System.out.println("Nome: " + restaurante.getNome() + ", Tipo: " + restaurante.getTipoDeCozinha() + ", Classificação: " + restaurante.getClassificacao());
+            }
+        }
+    }
+}
